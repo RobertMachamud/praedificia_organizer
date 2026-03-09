@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<div class="login-cont flex-center">
+    <div class="login">
+        <form method="POST" action="{{ url_for('login') }}" class="flex-center">
+            <h3></h3>
+            <i class="bi bi-door-open"></i>
+             <!-- Username -->
+             <div class="data-input">
+                 <input id="username" name="benutzername" type="text" required>
+                 <div class="input-underline"></div>
+                 <label for="username">BENUTZERNAME <i class="i-login bi bi-person"></i></label>
+             </div>
+             <!-- Password -->
+             <div class="data-input">
+                 <input id="password" name="password" type="password" required>
+                 <div class="input-underline"></div>
+                 <label for="password">PASSWORT <i class="i-login bi bi-key"></i></label>
+             </div>
+             <!-- Sign In BUTTON Container -->
+             <div class="sign-btn-cont">
+                 <button type="submit" class="btn btn-primary">Einloggen</button>
+             </div>
+     </form>
+    </div>
+</div>
+
+
+{% endblock %}

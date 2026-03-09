@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+
+{{ user["username"].capitalize() }}
+{{ user["title"] }}
+
+<!-- Profile Image -->
+<div class="profile-img">
+    <img src="{{ url_for('static', filename='img/chef_profile.png') }}" alt="profile picture">
+</div>
+
+{% endblock %}

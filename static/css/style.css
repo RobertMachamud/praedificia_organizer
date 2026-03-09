@@ -1,0 +1,54 @@
+/* LOGIN ---------------------------------------- */
+
+.login-cont
+{
+    min-height: 100vh;
+    min-width: 100vw;
+}
+
+.login form
+{
+    flex-direction: column;
+}
+
+.data-input
+{
+    margin-bottom: 1.2rem;
+}
+
+.data-input input
+{
+    padding: 8px;
+    font-size: 20px;
+    margin-bottom: 8px;
+    padding-left: 5px;
+    font-weight: 520;
+}
+
+.sign-btn-cont button
+{
+    font-size: 18px;
+    margin-top: .5rem;
+}
+
+.i-login
+{
+    font-size: 18px
+}
+
+.bi-door-open
+{
+    font-size: 55px;
+    margin-bottom: 2.25rem;
+}
+
+
+/* PROJEKTE ---------------------------------------- */
+
+
+
+
+
+
+/*  ---------------------------------------- */
+/*  ---------------------------------------- */

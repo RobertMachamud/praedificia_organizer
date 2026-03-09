@@ -16,6 +16,12 @@ app.config["MONGO_DBNAME"] = os.environ.get("MONGO_DBNAME")
 app.config["MONGO_URI"] = os.environ.get("MONGO_URI")
 app.secret_key = os.environ.get("SECRET_KEY")
 
+# app.config["MONGO_DBNAME"] = "robertmachamud_db_user:BKKedhVcReC5wjxI@cluster0.zas8qlg.mongodb.net/"
+# app.config["MONGO_URI"] = "mongodb+srv://robertmachamud_db_user:BKKedhVcReC5wjxI@cluster0.zas8qlg.mongodb.net/"
+# app.secret_key = "BKKedhVcReC5wjxI"
+
+
+
 mongo = PyMongo(app)
 
 
