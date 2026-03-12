@@ -30,6 +30,40 @@ def index():
     return render_template("index.html")
 
 
+
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    if request.method == "POST":
+        # checking if username already exist in db
+        user_exists = mongo.db.users.find_one(
+            {"username": request.form.get("username").lower()}
+        )
+
+        if user_exists:
+            flash("Sorry, this Username is already taken")
+            return redirect(url_for("register"))
+
+        register = {
+            "name": request.form.get("name").lower(),
+            "username": request.form.get("username").lower(),
+            "password": generate_password_hash(request.form.get("password")),
+            "email": request.form.get("email"),
+            "tel": request.form.get("tel"),
+            "bernd": request.form.get("bernd"),
+            "profile_img": "chef_profile.png",
+            "saved_projects": []
+        }
+
+        mongo.db.users.insert_one(register)
+
+        # putting new user into session cookie
+        session["user"] = request.form.get("username").lower()
+        return redirect(url_for("profile", username=session["user"]))
+
+    return render_template("register.html")
+
+
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
@@ -63,9 +97,85 @@ def logout():
     return redirect(url_for("login"))
 
 
+
 @app.route("/index")
 def index():
     projects = list(mongo.db.projects.find())
     categories = list(mongo.db.categories.find())
     return render_template("index.html", projects=projects,
                     categories=categories)
+
+
+
+@app.route("/profile/<username>", methods=["GET", "POST"])
+def profile(username):
+    # use session user's username from db
+    user = mongo.db.users.find_one(
+        {"username": session["user"]}
+    )
+
+    username = user["username"]
+    if session["user"]:
+        return render_template("profile.html", username=username, user=user)
+
+    return redirect(url_for("login"))
+
+
+
+@app.route("/clicked-project/<project_id>")
+def clicked_project(project_id):
+    if "user" in session:
+        user = mongo.db.users.find_one(
+            {"username": session["user"]}
+        )
+        if project_id not in user["saved_projects"]:
+            button_txt = "Save Project"
+        else:
+            button_txt = "Unsave Project"
+    else:
+        button_txt = "Save Project"
+
+    project = mongo.db.projects.find_one({"_id": ObjectId(project_id)})
+    return render_template(
+        "clicked_project.html", project=project, button_txt=button_txt)
+
+
+@app.route("/save_project/<project_id>", methods=["GET", "POST"])
+def save_project(project_id):
+    user = mongo.db.users.find_one(
+        {"username": session["user"]}
+    )
+    project = mongo.db.projects.find_one({"_id": ObjectId(project_id)})
+
+    if project_id not in user["saved_projects"]:
+        mongo.db.users.update(
+            {"_id": user["_id"]},
+            {"$push": {"saved_projects": project_id}}
+        )
+        button_txt = "Unsave project"
+        flash("project Saved")
+    else:
+        mongo.db.users.update(
+            {"_id": user["_id"]},
+            {"$pull": {"saved_projects": project_id}}
+        )
+        button_txt = "Save project"
+        flash("project Unsaved")
+    return render_template(
+        "clicked_project.html", project=project, button_txt=button_txt)
+
+
+
+@app.route("/saved_projects")
+def saved_projects():
+    saved_projects = []
+    user = mongo.db.users.find_one(
+        {"username": session["user"]}
+    )
+
+    for id in user["saved_projects"]:
+        retrieved_saved_recipe = mongo.db.projects.find_one(
+            {"_id": ObjectId(id)})
+        saved_projects.append(retrieved_saved_recipe)
+
+    return render_template("saved_projects.html", saved_projects=saved_projects)
