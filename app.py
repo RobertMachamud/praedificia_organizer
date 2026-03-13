@@ -25,12 +25,6 @@ app.secret_key = os.environ.get("SECRET_KEY")
 mongo = PyMongo(app)
 
 
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-
-
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if request.method == "POST":
@@ -47,9 +41,11 @@ def register():
             "name": request.form.get("name").lower(),
             "username": request.form.get("username").lower(),
             "password": generate_password_hash(request.form.get("password")),
+            "title": request.form.get("title"),
             "email": request.form.get("email"),
             "tel": request.form.get("tel"),
-            "bernd": request.form.get("bernd"),
+            "bernd": False,
+            "pers_color": "#0d6efd",
             "profile_img": "chef_profile.png",
             "saved_projects": []
         }
